@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  openapi-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: openapi-mcp
+    restart: unless-stopped
+    command: ["./bin/openapi-mcp", "--http=:8080", "--api-key=test", "examples/kopilot.yaml"]
