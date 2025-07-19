@@ -1,5 +1,5 @@
 # --- Builder stage ---
-FROM golang:1.22.0-alpine AS builder
+FROM golang:1.22.5-alpine AS builder
 
 RUN apk add --no-cache make git
 
@@ -9,7 +9,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod download -x
+RUN go mod download
 
 RUN make
 
