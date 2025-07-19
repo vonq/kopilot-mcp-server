@@ -33,4 +33,4 @@ RUN chmod +x ./bin/openapi-mcp
 EXPOSE 8080
 
 # Run the application
-CMD ["./bin/openapi-mcp", "--http=:8080", "--http-transport=sse", "--api-key=test", "examples/kopilot.yaml"]
+CMD ["./bin/openapi-mcp", "--http=:8080", "--api-key=test", "examples/kopilot.yaml"]
