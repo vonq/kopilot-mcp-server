@@ -13,8 +13,6 @@ RUN go mod download
 
 RUN make
 
-RUN sudo lsof -i :8080
-
 # --- Final stage (minimal image) ---
 FROM alpine:latest
 
