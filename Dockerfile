@@ -1,20 +1,16 @@
 # --- Builder stage ---
-FROM golang:1.21-alpine AS builder
+FROM golang:1.22.0-alpine AS builder
 
-# Install make and any required tools
 RUN apk add --no-cache make git
 
-# Set the working directory
+ENV GOTOOLCHAIN=local
+
 WORKDIR /app
 
-# Cache dependencies first
-COPY go.mod go.sum ./
-RUN go mod download
-
-# Copy the full source code
 COPY . .
 
-# Run make (assumes this builds into bin/openapi-mcp)
+RUN go mod download
+
 RUN make
 
 # --- Final stage (minimal image) ---
