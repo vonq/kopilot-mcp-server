@@ -9,7 +9,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN go mod download
+RUN go mod download -x
 
 RUN make
 
