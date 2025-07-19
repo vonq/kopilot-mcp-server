@@ -1,0 +1,6481 @@
+openapi: 3.0.1
+info:
+  title: Metis API
+  description: Description
+  version: v1
+servers:
+  - url: http://kopilot-api.web-acceptance.vonq-aws.com/
+security:
+  - Bearer: []
+  - Key: []
+paths:
+  /agents/personalities/:
+    get:
+      tags:
+        - agents
+      operationId: agents_personalities_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AgentPersonality'
+    post:
+      tags:
+        - agents
+      operationId: agents_personalities_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentPersonality'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentPersonality'
+      x-codegen-request-body-name: data
+  /agents/personalities/{id}/:
+    get:
+      tags:
+        - agents
+      operationId: agents_personalities_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this agent personality.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentPersonality'
+    patch:
+      tags:
+        - agents
+      operationId: agents_personalities_partial_update
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this agent personality.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentPersonality'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentPersonality'
+      x-codegen-request-body-name: data
+  /agents/tasks/:
+    get:
+      tags:
+        - agents
+      operationId: agents_tasks_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AgentTask'
+    post:
+      tags:
+        - agents
+      operationId: agents_tasks_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTask'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTask'
+      x-codegen-request-body-name: data
+  /agents/tasks/retell_webhook/:
+    post:
+      tags:
+        - agents
+      operationId: agents_tasks_retell_webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTask'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTask'
+      x-codegen-request-body-name: data
+  /agents/tasks/twilio_delivery_status_webhook/:
+    post:
+      tags:
+        - agents
+      summary: Webhook endpoint called by Twilio when the status of an outbound message
+        changes.
+      operationId: agents_tasks_twilio_delivery_status_webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTask'
+        required: true
+      responses:
+        "200":
+          description: The webhook was intercepted.
+          content: {}
+        "400":
+          description: Missing fields or the webhook call does not match the security
+            settings.
+          content: {}
+      x-codegen-request-body-name: data
+  /agents/tasks/twilio_msg_webhook/:
+    post:
+      tags:
+        - agents
+      summary: Webhook endpoint called by Twilio when a candidate replies to a message
+        sent by our AI.
+      operationId: agents_tasks_twilio_msg_webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTask'
+        required: true
+      responses:
+        "200":
+          description: Webhook intercepted ok
+          content: {}
+        "400":
+          description: Missing fields or the task does not match the inbox id.
+          content: {}
+        "404":
+          description: The agent task does not exist or no previous system message
+            found.
+          content: {}
+      x-codegen-request-body-name: data
+  /agents/tasks/{id}/:
+    get:
+      tags:
+        - agents
+      operationId: agents_tasks_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this agent task.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentTask'
+  /agents/tasks/{id}/mailslurp_webhook/:
+    post:
+      tags:
+        - agents
+      summary: Webhook endpoint called by MailSlurp when a candidate replies to an
+        email sent by our AI.
+      operationId: agents_tasks_mailslurp_webhook
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this agent task.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTask'
+        required: true
+      responses:
+        "200":
+          description: Webhook intercepted ok
+          content: {}
+        "400":
+          description: Missing fields or the task does not match the inbox id.
+          content: {}
+        "404":
+          description: The agent task does not exist
+          content: {}
+      x-codegen-request-body-name: data
+  /agents/tasks/{id}/reply/:
+    post:
+      tags:
+        - agents
+      summary: "Use this endpoint to add a human reply to a conversation started by\
+        \ an agent. The endpoint will return the AI's reply to the candidate, and\
+        \ whether the task is finished or not.The task must have been created before\
+        \ calling this endpoint and must not be finished already. "
+      operationId: agents_tasks_reply
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this agent task.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReplyToAgent'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReplyToAgentResponse'
+        "400":
+          description: Missing fields or the task is finished
+          content: {}
+        "404":
+          description: The agent task does not exist
+          content: {}
+      x-codegen-request-body-name: data
+  /ats-integrations/:
+    get:
+      tags:
+        - ats-integrations
+      operationId: ats-integrations_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AtsIntegration'
+    post:
+      tags:
+        - ats-integrations
+      operationId: ats-integrations_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtsIntegration'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AtsIntegration'
+      x-codegen-request-body-name: data
+  /ats-integrations/merge-create-link/:
+    post:
+      tags:
+        - ats-integrations
+      operationId: ats-integrations_merge_create_link
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtsIntegration'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AtsIntegration'
+      x-codegen-request-body-name: data
+  /ats-integrations/merge-webhook/:
+    post:
+      tags:
+        - ats-integrations
+      operationId: ats-integrations_merge_webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AtsIntegration'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AtsIntegration'
+      x-codegen-request-body-name: data
+  /ats-integrations/{id}/:
+    get:
+      tags:
+        - ats-integrations
+      operationId: ats-integrations_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this ats integration.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AtsIntegration'
+    delete:
+      tags:
+        - ats-integrations
+      operationId: ats-integrations_delete
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this ats integration.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: ""
+          content: {}
+  /authentication/me/:
+    get:
+      tags:
+        - authentication
+      operationId: authentication_me_list
+      responses:
+        "200":
+          description: ""
+          content: {}
+  /candidates/campaigns/{campaign_id}/applications/:
+    post:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_create
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicApplication'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicApplication'
+      x-codegen-request-body-name: data
+  /candidates/campaigns/{campaign_id}/applications/{application_uuid}/interview:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_interview_list
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: application_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content: {}
+    post:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_interview_create
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: application_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: ""
+          content: {}
+  /candidates/campaigns/{campaign_id}/applications/{application_uuid}/knockout:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_knockout_list
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: application_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content: {}
+    post:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_knockout_create
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: application_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: ""
+          content: {}
+  /candidates/campaigns/{campaign_id}/applications/{application_uuid}/knockout/chat-messages:
+    post:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_knockout_chat-messages_create
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: application_uuid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: ""
+          content: {}
+  /candidates/campaigns/{campaign_id}/applications/{uuid}/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_read
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicApplication'
+    patch:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_partial_update
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicApplication'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicApplication'
+      x-codegen-request-body-name: data
+  /candidates/campaigns/{campaign_id}/applications/{uuid}/send-application-link/:
+    post:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_send_application_link
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicApplication'
+        required: true
+      responses:
+        "201":
+          description: OK
+          content: {}
+        "400":
+          description: Bad Request
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: data
+  /candidates/campaigns/{campaign_id}/applications/{uuid}/stats/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_applications_stats
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicApplication'
+  /candidates/campaigns/{id}/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_campaigns_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCampaign'
+  /candidates/companies/{id}/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_companies_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this company.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicCompany'
+  /candidates/human-interviews/events/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_human-interviews_events_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublicEvent'
+  /candidates/human-interviews/events/{id}/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_human-interviews_events_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEvent'
+  /candidates/human-interviews/events/{id}/attend/:
+    post:
+      tags:
+        - candidates
+      operationId: candidates_human-interviews_events_attend
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicEvent'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicEvent'
+      x-codegen-request-body-name: data
+  /candidates/jobs/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_jobs_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublicJob'
+  /candidates/jobs/{id}/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_jobs_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicJob'
+  /candidates/marketing/emails:
+    post:
+      tags:
+        - candidates
+      description: Add an email address to Kopilot mailing list
+      operationId: candidates_marketing_emails_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Email'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        "400":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: data
+  /candidates/resumes/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_resumes_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublicResume'
+    post:
+      tags:
+        - candidates
+      operationId: candidates_resumes_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicResume'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicResume'
+      x-codegen-request-body-name: data
+  /candidates/resumes/{uuid}/:
+    get:
+      tags:
+        - candidates
+      operationId: candidates_resumes_read
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicResume'
+    patch:
+      tags:
+        - candidates
+      operationId: candidates_resumes_partial_update
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicResume'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicResume'
+      x-codegen-request-body-name: data
+  /candidates/resumes/{uuid}/edit-basic/:
+    patch:
+      tags:
+        - candidates
+      operationId: candidates_resumes_edit_basic
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PublicResume'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicResume'
+      x-codegen-request-body-name: data
+  /evaluations/:
+    get:
+      tags:
+        - evaluations
+      operationId: evaluations_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ResumeEvaluation'
+  /evaluations/{id}/:
+    get:
+      tags:
+        - evaluations
+      operationId: evaluations_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this resume evaluation.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResumeEvaluation'
+  /interviews/generate-questions/:
+    post:
+      tags:
+        - interviews
+      operationId: interviews_generate-questions_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateQuestions'
+        required: true
+      responses:
+        "202":
+          description: Interview questions are being generated.
+          content: {}
+        "400":
+          description: Bad request
+          content: {}
+      x-codegen-request-body-name: data
+  /interviews/questions/:
+    get:
+      tags:
+        - interviews
+      operationId: interviews_questions_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Question'
+    post:
+      tags:
+        - interviews
+      operationId: interviews_questions_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+      x-codegen-request-body-name: data
+  /interviews/questions/{id}/:
+    get:
+      tags:
+        - interviews
+      operationId: interviews_questions_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this question.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+    put:
+      tags:
+        - interviews
+      operationId: interviews_questions_update
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this question.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+      x-codegen-request-body-name: data
+    delete:
+      tags:
+        - interviews
+      operationId: interviews_questions_delete
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this question.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: ""
+          content: {}
+    patch:
+      tags:
+        - interviews
+      operationId: interviews_questions_partial_update
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this question.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Question'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Question'
+      x-codegen-request-body-name: data
+  /interviews/reply/:
+    post:
+      tags:
+        - interviews
+      operationId: interviews_reply_create
+      responses:
+        "201":
+          description: ""
+          content: {}
+  /job-descriptions/extract-from-file/:
+    get:
+      tags:
+        - job-descriptions
+      operationId: job-descriptions_extract-from-file_list
+      responses:
+        "200":
+          description: ""
+          content: {}
+  /job-descriptions/generate/:
+    get:
+      tags:
+        - job-descriptions
+      operationId: job-descriptions_generate_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/JobDescription'
+    post:
+      tags:
+        - job-descriptions
+      operationId: job-descriptions_generate_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobDescription'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDescription'
+      x-codegen-request-body-name: data
+  /job-descriptions/generate/{id}/:
+    get:
+      tags:
+        - job-descriptions
+      operationId: job-descriptions_generate_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDescription'
+    put:
+      tags:
+        - job-descriptions
+      operationId: job-descriptions_generate_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobDescription'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDescription'
+      x-codegen-request-body-name: data
+    delete:
+      tags:
+        - job-descriptions
+      operationId: job-descriptions_generate_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: ""
+          content: {}
+    patch:
+      tags:
+        - job-descriptions
+      operationId: job-descriptions_generate_partial_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobDescription'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobDescription'
+      x-codegen-request-body-name: data
+  /llm_accounts/export/:
+    get:
+      tags:
+        - llm_accounts
+      operationId: llm_accounts_export_list
+      responses:
+        "200":
+          description: ""
+          content: {}
+  /llm_accounts/health-check/:
+    get:
+      tags:
+        - llm_accounts
+      operationId: llm_accounts_health-check_list
+      responses:
+        "200":
+          description: ""
+          content: {}
+  /llm_accounts/sample-definitions/:
+    get:
+      tags:
+        - llm_accounts
+      operationId: llm_accounts_sample-definitions_list
+      responses:
+        "200":
+          description: ""
+          content: {}
+  /locations/:
+    get:
+      tags:
+        - locations
+      operationId: locations_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+        - name: text
+          in: query
+          description: The location text to search
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MapboxResponse'
+  /recruiters/agents/messaging-services/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_agents_messaging-services_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MessagingService'
+  /recruiters/agents/messaging-services/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_agents_messaging-services_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagingService'
+  /recruiters/campaigns/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Campaign'
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/easy_create/:
+    post:
+      tags:
+        - recruiters
+      summary: Easily create a campaign in a single call.
+      description: Create a campaign in a single call. This endpoint is used to create
+        a campaign with all the necessary data.
+      operationId: recruiters_campaigns_easy_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+        required: true
+      responses:
+        "201":
+          description: The campaign was created successfully.
+          content: {}
+        "400":
+          description: The request was invalid.
+          content: {}
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{campaign_id}/applications/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_list
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: stage
+          in: query
+          description: stage
+          schema:
+            type: string
+        - name: exclude_rejected
+          in: query
+          description: exclude_rejected
+          schema:
+            type: string
+        - name: applied_in_days
+          in: query
+          description: applied_in_days
+          schema:
+            type: string
+        - name: years_of_experience_min
+          in: query
+          description: years_of_experience_min
+          schema:
+            type: string
+        - name: years_of_experience_max
+          in: query
+          description: years_of_experience_max
+          schema:
+            type: string
+        - name: has_management_experience
+          in: query
+          description: has_management_experience
+          schema:
+            type: string
+        - name: has_university_degree
+          in: query
+          description: has_university_degree
+          schema:
+            type: string
+        - name: has_certifications
+          in: query
+          description: has_certifications
+          schema:
+            type: string
+        - name: has_driving_license
+          in: query
+          description: has_driving_license
+          schema:
+            type: string
+        - name: has_volunteering_experience
+          in: query
+          description: has_volunteering_experience
+          schema:
+            type: string
+        - name: name
+          in: query
+          description: name
+          schema:
+            type: string
+        - name: evaluation_score_min
+          in: query
+          description: evaluation_score_min
+          schema:
+            type: string
+        - name: qualified
+          in: query
+          description: qualified
+          schema:
+            type: string
+        - name: finalised
+          in: query
+          description: finalised
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Application'
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_create
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{campaign_id}/applications/bulk-reject/:
+    post:
+      tags:
+        - recruiters
+      description: |-
+        Bulk‐reject multiple applications by passing:
+        - ids: list[int]
+        - rejected_reason: str
+        - notify_candidate: bool
+      operationId: recruiters_campaigns_applications_bulk_reject
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{campaign_id}/applications/{application_id}/knockout:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_knockout_list
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: application_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content: {}
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_knockout_create
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: application_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: ""
+          content: {}
+  /recruiters/campaigns/{campaign_id}/applications/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_read
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this application.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationDetail'
+    patch:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_partial_update
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this application.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{campaign_id}/applications/{id}/change-log/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_change_log
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this application.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+  /recruiters/campaigns/{campaign_id}/applications/{id}/conversation-attachments/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_conversation_attachments
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this application.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationConversationAttachments'
+        "400":
+          description: Bad Request
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+  /recruiters/campaigns/{campaign_id}/applications/{id}/export-as-pdf/:
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_export_application_pdf
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this application.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content: {}
+        "400":
+          description: Bad Request
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{campaign_id}/applications/{id}/interview/:
+    get:
+      tags:
+        - recruiters
+      description: Retrieve the interview for a specific application.
+      operationId: recruiters_campaigns_applications_interview
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this application.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+  /recruiters/campaigns/{campaign_id}/applications/{id}/stats/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_applications_stats
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this application.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+  /recruiters/campaigns/{campaign_id}/job-requirement-evaluations/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_job-requirement-evaluations_list
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+        - name: application_ids
+          in: query
+          description: Comma separated list of application ids
+          schema:
+            type: string
+        - name: requirement_short_names
+          in: query
+          description: Comma separated list of requirement names
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobRequirementEvaluation'
+  /recruiters/campaigns/{campaign_id}/job-requirement-evaluations/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_job-requirement-evaluations_read
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: A unique integer value identifying this resume evaluation.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content: {}
+  /recruiters/campaigns/{campaign_id}/modules/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_modules_list
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CampaignModule'
+  /recruiters/campaigns/{campaign_id}/modules/{module}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_modules_read
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: module
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignModule'
+    put:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_modules_update
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: module
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignModule'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignModule'
+      x-codegen-request-body-name: data
+    delete:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_modules_delete
+      parameters:
+        - name: campaign_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: module
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: ""
+          content: {}
+  /recruiters/campaigns/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+    delete:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_delete
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: ""
+          content: {}
+    patch:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_partial_update
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{id}/activate/:
+    patch:
+      tags:
+        - recruiters
+      summary: Activate a campaign by transitioning it to active state.
+      operationId: recruiters_campaigns_activate
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        "404":
+          description: The campaign does not exist
+          content: {}
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{id}/assessments/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_assessments_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+    patch:
+      tags:
+        - recruiters
+      operationId: recruiters_campaigns_assessments_partial_update
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{id}/lead-nurturing/:
+    get:
+      tags:
+        - recruiters
+      summary: Use this endpoint to get the lead nurturing settings for a campaign.
+      operationId: recruiters_campaigns_lead-nurturing_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignLeadNurturing'
+        "400":
+          description: The campaign does not have lead nurturing enabled
+          content: {}
+        "404":
+          description: The campaign does not exist
+          content: {}
+    patch:
+      tags:
+        - recruiters
+      summary: Use this endpoint to save the lead nurturing settings for a campaign.
+      operationId: recruiters_campaigns_lead-nurturing_partial_update
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CampaignLeadNurturing'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CampaignLeadNurturing'
+        "400":
+          description: "Missing fields, invalid data, or the campaign does not have\
+            \ lead nurturing enabled"
+          content: {}
+        "404":
+          description: The campaign does not exist
+          content: {}
+      x-codegen-request-body-name: data
+  /recruiters/campaigns/{id}/stop/:
+    patch:
+      tags:
+        - recruiters
+      summary: Stop a campaign by transitioning it to done state.
+      operationId: recruiters_campaigns_stop
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this campaign.
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Campaign'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Campaign'
+        "400":
+          description: The campaign cannot be stopped.
+          content: {}
+        "404":
+          description: The campaign does not exist
+          content: {}
+      x-codegen-request-body-name: data
+  /recruiters/companies/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_companies_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+    patch:
+      tags:
+        - recruiters
+      operationId: recruiters_companies_partial_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+      x-codegen-request-body-name: data
+  /recruiters/jobs/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_list
+      parameters:
+        - name: source
+          in: query
+          description: source
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: search
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Job'
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JobCreate'
+        required: true
+      responses:
+        "201":
+          description: OK
+          content: {}
+        "400":
+          description: Bad Request
+          content: {}
+      x-codegen-request-body-name: data
+  /recruiters/jobs/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+  /recruiters/jobs/{id}/invite/:
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_invite
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteToApply'
+        required: true
+      responses:
+        "201":
+          description: OK
+          content: {}
+        "400":
+          description: Bad Request
+          content: {}
+        "404":
+          description: Not Found
+          content: {}
+      x-codegen-request-body-name: data
+  /recruiters/jobs/{job_id}/requirements/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_requirements_list
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GeneratedJobRequirement'
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_requirements_create
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneratedJobRequirement'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratedJobRequirement'
+      x-codegen-request-body-name: data
+  /recruiters/jobs/{job_id}/requirements/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_requirements_read
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneratedJobRequirement'
+    delete:
+      tags:
+        - recruiters
+      operationId: recruiters_jobs_requirements_delete
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: ""
+          content: {}
+  /recruiters/resumes/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_resumes_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Resume'
+    post:
+      tags:
+        - recruiters
+      operationId: recruiters_resumes_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resume'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resume'
+      x-codegen-request-body-name: data
+  /recruiters/resumes/{id}/:
+    get:
+      tags:
+        - recruiters
+      operationId: recruiters_resumes_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resume'
+    delete:
+      tags:
+        - recruiters
+      operationId: recruiters_resumes_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: ""
+          content: {}
+  /search/process-text/:
+    post:
+      tags:
+        - search
+      operationId: search_process-text_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TextToQuery'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TextToQuery'
+      x-codegen-request-body-name: data
+  /search/resumes/:
+    post:
+      tags:
+        - search
+      operationId: search_resumes_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResumeSearch'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResumeSearch'
+      x-codegen-request-body-name: data
+  /smartfill/:
+    get:
+      tags:
+        - smartfill
+      operationId: smartfill_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormFillTaskResponse'
+    post:
+      tags:
+        - smartfill
+      operationId: smartfill_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FormFillTaskRequest'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormFillTaskResponse'
+      x-codegen-request-body-name: data
+  /smartfill/{id}/:
+    get:
+      tags:
+        - smartfill
+      operationId: smartfill_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this form fill task.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FormFillTaskDetails'
+  /smartfillold/:
+    post:
+      tags:
+        - smartfillold
+      operationId: smartfillold_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MetisRequest'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetisResponse'
+      x-codegen-request-body-name: data
+  /smartfillold/{task_id}:
+    get:
+      tags:
+        - smartfillold
+      operationId: smartfillold_read
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetisResponse'
+  /social-media/facebook/campaigns/:
+    get:
+      tags:
+        - social-media
+      operationId: social-media_facebook_campaigns_list
+      responses:
+        "200":
+          description: ""
+          content: {}
+  /timezones/:
+    get:
+      tags:
+        - timezones
+      operationId: timezones_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timezone'
+  /timezones/{id}/:
+    get:
+      tags:
+        - timezones
+      operationId: timezones_read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Timezone'
+  /vacancies/stepstone/:
+    get:
+      tags:
+        - vacancies
+      operationId: vacancies_stepstone_list
+      parameters:
+        - name: limit
+          in: query
+          description: Number of results to return per page.
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          description: The initial index from which to return the results.
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                required:
+                  - count
+                  - results
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    format: uri
+                    nullable: true
+                  previous:
+                    type: string
+                    format: uri
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StepstoneVacancy'
+    post:
+      tags:
+        - vacancies
+      operationId: vacancies_stepstone_create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StepstoneCreateVacancy'
+        required: true
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StepstoneCreateVacancy'
+      x-codegen-request-body-name: data
+  /vacancies/stepstone/{id}/:
+    get:
+      tags:
+        - vacancies
+      operationId: vacancies_stepstone_read
+      parameters:
+        - name: id
+          in: path
+          description: A unique integer value identifying this stepstone vacancy.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StepstoneVacancy'
+components:
+  schemas:
+    AgentPersonality:
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        lead_nurturing_personality_prompt:
+          title: Lead nurturing personality prompt
+          type: string
+          nullable: true
+        interviewer_personality_prompt:
+          title: Interviewer personality prompt
+          type: string
+          nullable: true
+        knockout_personality_prompt:
+          title: Knockout personality prompt
+          type: string
+          nullable: true
+        is_default:
+          title: Is default
+          type: boolean
+        company:
+          title: Company
+          type: integer
+          nullable: true
+    AgentTask:
+      required:
+        - agent_type
+        - input
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        input:
+          title: Input
+          type: object
+          properties: {}
+        chat_messages:
+          title: Chat messages
+          type: string
+          readOnly: true
+        agent_type:
+          title: Agent type
+          type: string
+          enum:
+            - knockout
+            - invitation
+            - reference_check
+            - identity_check
+            - campaign
+            - interview
+            - lead_nurturing
+            - interview_scheduling
+        communication_channel:
+          title: Communication channel
+          type: string
+          enum:
+            - web
+            - email
+            - whatsapp
+            - phone
+            - sms
+        channel_remote_id:
+          title: Channel remote id
+          maxLength: 255
+          type: string
+        channel_remote_deleted:
+          title: Channel remote deleted
+          type: boolean
+        context:
+          title: Context
+          type: object
+          properties: {}
+          nullable: true
+        output:
+          title: Output
+          type: object
+          properties: {}
+          nullable: true
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - started
+            - finished
+            - failed
+            - canceled
+        parser_status:
+          title: Parser status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        reminders_enabled:
+          title: Reminders enabled
+          type: boolean
+        language:
+          title: Language
+          maxLength: 255
+          minLength: 1
+          type: string
+        application:
+          title: Application
+          type: integer
+          nullable: true
+    ReplyToAgent:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          title: Message
+          minLength: 1
+          type: string
+        attachments:
+          type: array
+          items:
+            minLength: 1
+            type: string
+    ReplyToAgentResponse:
+      required:
+        - ai_message
+        - task_is_done
+      type: object
+      properties:
+        ai_message:
+          title: Ai message
+          minLength: 1
+          type: string
+        task_is_done:
+          title: Task is done
+          type: boolean
+    AtsIntegration:
+      type: object
+      properties:
+        ats_name:
+          title: Ats name
+          maxLength: 255
+          type: string
+          nullable: true
+        ats_logo:
+          title: Ats logo
+          maxLength: 255
+          type: string
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - importing
+            - processing
+            - active
+        last_synced_at:
+          title: Last synced at
+          type: string
+          format: date-time
+          nullable: true
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+    PublicJob:
+      required:
+        - company
+        - title
+      type: object
+      properties:
+        assessment_type:
+          title: Assessment type
+          type: string
+          readOnly: true
+        campaign:
+          title: Campaign
+          type: string
+          readOnly: true
+        company:
+          title: Company
+          type: integer
+        company_name:
+          title: Company name
+          maxLength: 255
+          type: string
+          nullable: true
+        company_logo_url:
+          title: Company logo url
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        external_reference_id:
+          title: External reference id
+          maxLength: 255
+          type: string
+          nullable: true
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        is_parsed:
+          title: Is parsed
+          type: boolean
+        location:
+          title: Location
+          maxLength: 255
+          type: string
+          nullable: true
+        meta_description:
+          title: Meta description
+          maxLength: 255
+          type: string
+          description: A short description of the job's characteristics. For demo
+            purposes only
+          nullable: true
+        questions_status:
+          title: Questions status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        raw_text:
+          title: Raw text
+          type: string
+          nullable: true
+        requirements:
+          title: Requirements
+          type: string
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        structured_document:
+          title: Structured document
+          type: object
+          properties: {}
+          nullable: true
+        title:
+          title: Title
+          maxLength: 255
+          minLength: 1
+          type: string
+    PublicCampaign:
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        type:
+          title: Type
+          type: string
+          enum:
+            - regular
+            - cpa
+        company_id:
+          title: Company id
+          type: string
+          readOnly: true
+        language:
+          title: Language
+          type: string
+          enum:
+            - nl
+            - fr
+            - de
+            - en
+            - es
+        modules:
+          title: Modules
+          type: string
+          readOnly: true
+        assessments:
+          title: Assessments
+          type: string
+          readOnly: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - draft
+            - paused
+            - active
+            - done
+        channel_mapping:
+          title: Channel mapping
+          type: object
+          properties: {}
+          nullable: true
+    Location:
+      required:
+        - canonical_name
+        - latitude
+        - longitude
+      type: object
+      properties:
+        canonical_name:
+          title: Canonical name
+          maxLength: 255
+          minLength: 1
+          type: string
+        country_code:
+          title: Country code
+          maxLength: 2
+          type: string
+          nullable: true
+        country_name:
+          title: Country name
+          maxLength: 255
+          type: string
+          nullable: true
+        latitude:
+          title: Latitude
+          type: number
+        longitude:
+          title: Longitude
+          type: number
+        city:
+          title: City
+          type: string
+          readOnly: true
+    Work:
+      type: object
+      properties:
+        normalized_location:
+          $ref: '#/components/schemas/Location'
+        company:
+          title: Company
+          maxLength: 256
+          type: string
+          nullable: true
+        position:
+          title: Position
+          maxLength: 256
+          type: string
+          nullable: true
+        location:
+          title: Location
+          type: object
+          properties: {}
+          nullable: true
+        location_string:
+          title: Location string
+          maxLength: 256
+          type: string
+          nullable: true
+        website:
+          title: Website
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        start_date:
+          title: Start date
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          title: End date
+          type: string
+          format: date
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        skills:
+          title: Skills
+          type: object
+          properties: {}
+          nullable: true
+        occupations:
+          title: Occupations
+          type: object
+          properties: {}
+          nullable: true
+        is_current:
+          title: Is current
+          type: boolean
+          nullable: true
+        is_self_employed:
+          title: Is self employed
+          type: boolean
+          nullable: true
+        is_management_role:
+          title: Is management role
+          type: boolean
+          nullable: true
+        number_employees_supervised:
+          title: Number employees supervised
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          nullable: true
+        elapsed_time:
+          title: Elapsed time
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          nullable: true
+    Education:
+      type: object
+      properties:
+        institution:
+          title: Institution
+          maxLength: 256
+          type: string
+          nullable: true
+        area:
+          title: Area
+          maxLength: 256
+          type: string
+          nullable: true
+        study_type:
+          title: Study type
+          type: string
+          nullable: true
+          enum:
+            - bachelor
+            - master
+            - phd
+            - associate
+            - certificate
+            - diploma
+            - high_school
+            - other
+        start_date:
+          title: Start date
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          title: End date
+          type: string
+          format: date
+          nullable: true
+        gpa:
+          title: Gpa
+          maxLength: 256
+          type: string
+          nullable: true
+        courses:
+          title: Courses
+          type: string
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        elapsed_time:
+          title: Elapsed time
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          nullable: true
+    Language:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          title: Name
+          maxLength: 256
+          minLength: 1
+          type: string
+        level:
+          title: Level
+          type: string
+          nullable: true
+          enum:
+            - beginner
+            - elementary
+            - intermediate
+            - upper_intermediate
+            - advanced
+            - native
+            - N/A
+    Skills:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          title: Name
+          maxLength: 256
+          minLength: 1
+          type: string
+        level:
+          title: Level
+          type: string
+          nullable: true
+          enum:
+            - beginner
+            - intermediate
+            - advanced
+            - expert
+            - N/A
+    MilitaryService:
+      type: object
+      properties:
+        title:
+          title: Title
+          maxLength: 256
+          type: string
+          nullable: true
+        branch:
+          title: Branch
+          maxLength: 256
+          type: string
+          nullable: true
+        rank:
+          title: Rank
+          maxLength: 256
+          type: string
+          nullable: true
+        country:
+          title: Country
+          maxLength: 256
+          type: string
+          nullable: true
+        start_date:
+          title: Start date
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          title: End date
+          type: string
+          format: date
+          nullable: true
+    SecurityCredential:
+      type: object
+      properties:
+        name:
+          title: Name
+          maxLength: 256
+          type: string
+          nullable: true
+        expiration_date:
+          title: Expiration date
+          type: string
+          format: date
+          nullable: true
+    Publication:
+      type: object
+      properties:
+        name:
+          title: Name
+          maxLength: 256
+          type: string
+          nullable: true
+        publisher:
+          title: Publisher
+          maxLength: 256
+          type: string
+          nullable: true
+        release_date:
+          title: Release date
+          type: string
+          format: date
+          nullable: true
+        website:
+          title: Website
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        summary:
+          title: Summary
+          type: string
+          nullable: true
+    Reference:
+      type: object
+      properties:
+        name:
+          title: Name
+          maxLength: 256
+          type: string
+          nullable: true
+        contact_information:
+          title: Contact information
+          type: string
+          nullable: true
+        relationship:
+          title: Relationship
+          maxLength: 1000
+          type: string
+          nullable: true
+    Certification:
+      type: object
+      properties:
+        name:
+          title: Name
+          maxLength: 256
+          type: string
+          nullable: true
+        authority:
+          title: Authority
+          maxLength: 256
+          type: string
+          nullable: true
+        license_number:
+          title: License number
+          maxLength: 256
+          type: string
+          nullable: true
+        start_date:
+          title: Start date
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          title: End date
+          type: string
+          format: date
+          nullable: true
+    Award:
+      type: object
+      properties:
+        title:
+          title: Title
+          maxLength: 256
+          type: string
+          nullable: true
+        start_date:
+          title: Start date
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          title: End date
+          type: string
+          format: date
+          nullable: true
+        awarder:
+          title: Awarder
+          maxLength: 256
+          type: string
+          nullable: true
+        summary:
+          title: Summary
+          type: string
+          nullable: true
+    Volunteer:
+      type: object
+      properties:
+        organisation_name:
+          title: Organisation name
+          maxLength: 256
+          type: string
+          nullable: true
+        description:
+          title: Description
+          type: string
+          nullable: true
+        location:
+          title: Location
+          type: object
+          properties: {}
+          nullable: true
+        start_date:
+          title: Start date
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          title: End date
+          type: string
+          format: date
+          nullable: true
+        normalized_location:
+          title: Normalized location
+          type: integer
+          nullable: true
+    Basic:
+      type: object
+      properties:
+        current_location:
+          $ref: '#/components/schemas/Location'
+        name:
+          title: Name
+          maxLength: 256
+          type: string
+          nullable: true
+        label:
+          title: Label
+          maxLength: 256
+          type: string
+          nullable: true
+        email:
+          title: Email
+          maxLength: 254
+          type: string
+          format: email
+          nullable: true
+        phone:
+          title: Phone
+          maxLength: 256
+          type: string
+          nullable: true
+        normalized_phone:
+          title: Normalized phone
+          maxLength: 256
+          type: string
+          nullable: true
+        website:
+          title: Website
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        summary:
+          title: Summary
+          type: string
+          nullable: true
+        mother_tongue:
+          title: Mother tongue
+          maxLength: 256
+          type: string
+          nullable: true
+        nationality:
+          title: Nationality
+          maxLength: 256
+          type: string
+          nullable: true
+        birth_date:
+          title: Birth date
+          type: string
+          format: date
+          nullable: true
+        willing_to_relocate:
+          title: Willing to relocate
+          type: boolean
+          nullable: true
+        drivers_license:
+          title: Drivers license
+          maxLength: 256
+          type: string
+          nullable: true
+        visa_status:
+          title: Visa status
+          maxLength: 256
+          type: string
+          nullable: true
+        social_profiles:
+          title: Social profiles
+          type: object
+          properties: {}
+          nullable: true
+        required_salary_range:
+          title: Required salary range
+          type: object
+          properties: {}
+          nullable: true
+    PublicResume:
+      required:
+        - company_id
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+          format: uuid
+          readOnly: true
+        work:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Work'
+        education:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Education'
+        language:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Language'
+        skill:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Skills'
+        military_service:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/MilitaryService'
+        security_credential:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/SecurityCredential'
+        publication:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Publication'
+        reference:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Reference'
+        certification:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Certification'
+        award:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Award'
+        volunteer:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Volunteer'
+        basic:
+          $ref: '#/components/schemas/Basic'
+        raw_text:
+          title: Raw text
+          minLength: 1
+          type: string
+          nullable: true
+        remote_url:
+          title: Remote url
+          minLength: 1
+          type: string
+          format: uri
+          nullable: true
+        company_id:
+          title: Company id
+          minLength: 1
+          type: string
+        can_invite_to_apply:
+          title: Can invite to apply
+          type: boolean
+          readOnly: true
+        application_count_by_stage:
+          title: Application count by stage
+          type: string
+          readOnly: true
+        name:
+          title: Name
+          minLength: 1
+          type: string
+          nullable: true
+        phone:
+          title: Phone
+          minLength: 1
+          type: string
+          nullable: true
+        email:
+          title: Email
+          minLength: 1
+          type: string
+          format: email
+          nullable: true
+        parser_configuration:
+          title: Parser configuration
+          type: string
+          enum:
+            - fast
+            - smart
+            - finetuned
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+        content_type:
+          title: Content type
+          maxLength: 255
+          type: string
+          nullable: true
+        raw_text_md5:
+          title: Raw text md5
+          maxLength: 32
+          type: string
+          nullable: true
+        processing_time:
+          title: Processing time
+          type: number
+          nullable: true
+        is_parsed:
+          title: Is parsed
+          type: boolean
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        total_experience:
+          title: Total experience
+          type: number
+          nullable: true
+        metadata:
+          title: Metadata
+          type: object
+          properties: {}
+          description: "Any extra data about the source of the resume, etc"
+          nullable: true
+        ats_integration:
+          title: Ats integration
+          type: integer
+          nullable: true
+        associated_companies:
+          uniqueItems: true
+          type: array
+          description: The companies that have access to this data.
+          items:
+            type: integer
+            description: The companies that have access to this data.
+    JobCustomRequirementEvaluation:
+      required:
+        - candidate_score
+        - requirement_description
+        - requirement_importance
+        - requirement_short_name
+      type: object
+      properties:
+        candidate_score:
+          title: Candidate score
+          type: integer
+        requirement_short_name:
+          title: Requirement short name
+          minLength: 1
+          type: string
+        requirement_description:
+          title: Requirement description
+          minLength: 1
+          type: string
+        requirement_importance:
+          title: Requirement importance
+          minLength: 1
+          type: string
+        score_explanation:
+          title: Score explanation
+          type: object
+          properties: {}
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+    PublicResumeEvaluation:
+      required:
+        - followup_questions
+        - interview_score
+        - job
+        - knockout_score
+        - resume
+        - score
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        resume:
+          title: Resume
+          type: integer
+          nullable: true
+        job:
+          title: Job
+          type: integer
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        job_requirements:
+          title: Job requirements
+          type: string
+          readOnly: true
+        custom_job_requirements:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/JobCustomRequirementEvaluation'
+        strengths:
+          title: Strengths
+          type: object
+          properties: {}
+          nullable: true
+        weaknesses:
+          title: Weaknesses
+          type: object
+          properties: {}
+          nullable: true
+        followup_questions:
+          title: Followup questions
+          type: object
+          properties: {}
+        score:
+          title: Score
+          type: integer
+        knockout_score:
+          title: Knockout score
+          type: integer
+          nullable: true
+        interview_score:
+          title: Interview score
+          type: integer
+          nullable: true
+        knockout_evaluation_done:
+          title: Knockout evaluation done
+          type: string
+          readOnly: true
+        interview_evaluation_done:
+          title: Interview evaluation done
+          type: string
+          readOnly: true
+    PublicApplication:
+      required:
+        - campaign_id
+        - resume_id
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        stage:
+          title: Stage
+          minLength: 1
+          type: string
+          readOnly: true
+        job_id:
+          title: Job id
+          type: string
+          readOnly: true
+        job:
+          $ref: '#/components/schemas/PublicJob'
+        campaign_id:
+          title: Campaign id
+          type: integer
+        campaign:
+          $ref: '#/components/schemas/PublicCampaign'
+        rejected:
+          title: Rejected
+          type: boolean
+        rejected_reason:
+          title: Rejected reason
+          type: string
+          nullable: true
+        resume_id:
+          title: Resume id
+          type: integer
+        resume:
+          $ref: '#/components/schemas/PublicResume'
+        status:
+          title: Status
+          type: string
+          enum:
+            - draft
+            - queued
+            - invited_to_apply
+            - applied
+            - knockout_assessed
+            - phone_screened
+            - interviewed
+            - offer_sent
+            - hired
+        overall_score:
+          title: Overall score
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          nullable: true
+        evaluation:
+          $ref: '#/components/schemas/PublicResumeEvaluation'
+        qualified:
+          title: Qualified
+          type: boolean
+          readOnly: true
+        vq_source:
+          title: Vq source
+          maxLength: 36
+          type: string
+          nullable: true
+        igb_tracker:
+          title: Igb tracker
+          maxLength: 36
+          type: string
+          nullable: true
+        finalised:
+          title: Finalised
+          type: boolean
+          readOnly: true
+    PublicCompany:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        name:
+          title: Name
+          maxLength: 255
+          minLength: 1
+          type: string
+        branding_primary_color_hex:
+          title: Branding primary color hex
+          maxLength: 7
+          type: string
+          nullable: true
+        branding_logo_url:
+          title: Branding logo url
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        branding_config:
+          title: Branding config
+          type: object
+          properties: {}
+          nullable: true
+        candidate_branding_enabled:
+          title: Candidate branding enabled
+          type: boolean
+        company_branding_config:
+          title: Company branding config
+          type: string
+          readOnly: true
+        company_logo_url:
+          title: Company logo url
+          type: string
+          readOnly: true
+    PublicEvent:
+      required:
+        - date
+        - max_attendees
+        - start_time
+        - title
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        title:
+          title: Title
+          maxLength: 255
+          minLength: 1
+          type: string
+        description:
+          title: Description
+          type: string
+        date:
+          title: Date
+          type: string
+          format: date
+        start_time:
+          title: Start time
+          type: string
+        end_time:
+          title: End time
+          type: string
+          nullable: true
+        max_attendees:
+          title: Max attendees
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+        attendee_count:
+          title: Attendee count
+          type: integer
+          readOnly: true
+        event_is_full:
+          title: Event is full
+          type: boolean
+          readOnly: true
+        address:
+          title: Address
+          maxLength: 255
+          type: string
+          nullable: true
+        video_call_url:
+          title: Video call url
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+    Email:
+      required:
+        - email
+      type: object
+      properties:
+        email:
+          title: Email
+          minLength: 1
+          type: string
+          format: email
+    SuccessResponse:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          title: Message
+          minLength: 1
+          type: string
+    ErrorResponse:
+      required:
+        - error
+      type: object
+      properties:
+        error:
+          title: Error
+          minLength: 1
+          type: string
+    ResumeEvaluation:
+      required:
+        - followup_questions
+        - interview_score
+        - job
+        - knockout_score
+        - resume
+        - score
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        resume:
+          title: Resume
+          type: integer
+          nullable: true
+        job:
+          title: Job
+          type: integer
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        job_requirements:
+          title: Job requirements
+          type: string
+          readOnly: true
+        custom_job_requirements:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/JobCustomRequirementEvaluation'
+        strengths:
+          title: Strengths
+          type: object
+          properties: {}
+          nullable: true
+        weaknesses:
+          title: Weaknesses
+          type: object
+          properties: {}
+          nullable: true
+        followup_questions:
+          title: Followup questions
+          type: object
+          properties: {}
+        score:
+          title: Score
+          type: integer
+        knockout_score:
+          title: Knockout score
+          type: integer
+          nullable: true
+        interview_score:
+          title: Interview score
+          type: integer
+          nullable: true
+        knockout_evaluation_done:
+          title: Knockout evaluation done
+          type: string
+          readOnly: true
+        interview_evaluation_done:
+          title: Interview evaluation done
+          type: string
+          readOnly: true
+    GenerateQuestions:
+      required:
+        - job_id
+      type: object
+      properties:
+        job_id:
+          title: Job id
+          type: integer
+        difficulty:
+          title: Difficulty
+          type: string
+          enum:
+            - EASY
+            - MEDIUM
+            - HARD
+            - PULSE_CHECK
+    Question:
+      required:
+        - job
+        - job_requirement_short_name
+        - justification
+        - question_text
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        question_text:
+          title: Question text
+          minLength: 1
+          type: string
+        followup_questions:
+          title: Followup questions
+          type: object
+          properties: {}
+        job_requirement_short_name:
+          title: Job requirement short name
+          maxLength: 255
+          minLength: 1
+          type: string
+        justification:
+          title: Justification
+          maxLength: 1024
+          minLength: 1
+          type: string
+        evaluation_criteria:
+          title: Evaluation criteria
+          type: object
+          properties: {}
+        category:
+          title: Category
+          maxLength: 255
+          type: string
+          nullable: true
+        difficulty:
+          title: Difficulty
+          maxLength: 255
+          type: string
+          nullable: true
+        language:
+          title: Language
+          maxLength: 255
+          type: string
+          nullable: true
+        job:
+          title: Job
+          type: integer
+    JobDescription:
+      required:
+        - language
+      type: object
+      properties:
+        id:
+          title: Id
+          type: string
+          format: uuid
+          readOnly: true
+        language:
+          title: Language
+          type: string
+          enum:
+            - nl
+            - fr
+            - de
+            - en
+            - es
+        job_title:
+          title: Job title
+          maxLength: 255
+          type: string
+          description: The title of the job position.
+          nullable: true
+        job_title_suggestions:
+          type: array
+          description: The job title suggestions of the job position.
+          nullable: true
+          readOnly: true
+          items:
+            title: Job title suggestions
+            maxLength: 255
+            minLength: 1
+            type: string
+        tasks_responsibilities:
+          title: Tasks responsibilities
+          type: string
+          description: The tasks and responsibilities associated with the job.
+          nullable: true
+        requirements:
+          title: Requirements
+          type: string
+          description: The requirements needed for the job.
+          nullable: true
+        status:
+          title: Status
+          type: string
+          readOnly: true
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        tone:
+          title: Tone
+          type: string
+          enum:
+            - formal
+            - informal
+        instructions:
+          title: Instructions
+          type: string
+        generate_tasks_responsibilities:
+          title: Generate tasks responsibilities
+          type: boolean
+        generate_requirements:
+          title: Generate requirements
+          type: boolean
+        generate_job_title_suggestions:
+          title: Generate job title suggestions
+          type: boolean
+        company_id:
+          title: Company id
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+    MapboxResponse:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          title: Name
+          minLength: 1
+          type: string
+        place_type:
+          title: Place type
+          type: string
+          readOnly: true
+        longitude:
+          title: Longitude
+          type: string
+          readOnly: true
+        latitude:
+          title: Latitude
+          type: string
+          readOnly: true
+    MessagingService:
+      required:
+        - name
+        - phone_number
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        phone_number:
+          title: Phone number
+          maxLength: 30
+          minLength: 1
+          type: string
+        name:
+          title: Name
+          maxLength: 255
+          minLength: 1
+          type: string
+        company:
+          title: Company
+          type: integer
+          nullable: true
+        is_default:
+          title: Is default
+          type: boolean
+          description: Is this the default messaging service?
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+    Job:
+      required:
+        - company
+        - title
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        structured_document:
+          title: Structured document
+          type: string
+          readOnly: true
+        job_requirements:
+          title: Job requirements
+          type: string
+          readOnly: true
+        parser_configuration:
+          title: Parser configuration
+          type: string
+          enum:
+            - fast
+            - smart
+            - finetuned
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+        title:
+          title: Title
+          maxLength: 255
+          minLength: 1
+          type: string
+        description:
+          title: Description
+          type: string
+          nullable: true
+        source:
+          title: Source
+          type: string
+          enum:
+            - internal
+            - ats
+        requirements:
+          title: Requirements
+          type: string
+          nullable: true
+        location:
+          title: Location
+          maxLength: 255
+          type: string
+          nullable: true
+        remote_url:
+          title: Remote url
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        raw_text:
+          title: Raw text
+          type: string
+          nullable: true
+        meta_description:
+          title: Meta description
+          maxLength: 255
+          type: string
+          description: A short description of the job's characteristics. For demo
+            purposes only
+          nullable: true
+        questions_status:
+          title: Questions status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        company_name:
+          title: Company name
+          maxLength: 255
+          type: string
+          nullable: true
+        company_logo_url:
+          title: Company logo url
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        is_parsed:
+          title: Is parsed
+          type: boolean
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        hires_goal:
+          title: Hires goal
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+        processing_time:
+          title: Processing time
+          type: number
+          nullable: true
+        generated_search_terms:
+          title: Generated search terms
+          type: object
+          properties: {}
+          nullable: true
+        external_reference_id:
+          title: External reference id
+          maxLength: 255
+          type: string
+          nullable: true
+        search_vector:
+          title: Search vector
+          type: string
+          nullable: true
+        extra_information:
+          title: Extra information
+          type: string
+          nullable: true
+        company:
+          title: Company
+          type: integer
+        ats_integration:
+          title: Ats integration
+          type: integer
+          nullable: true
+    GeneratedJobRequirement:
+      required:
+        - requirement_short_name
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        requirement_short_name:
+          title: Requirement short name
+          maxLength: 255
+          minLength: 1
+          type: string
+        localized_name:
+          title: Localized name
+          maxLength: 255
+          type: string
+          nullable: true
+        requirement_description:
+          title: Requirement description
+          type: string
+          nullable: true
+        requirement_importance:
+          title: Requirement importance
+          type: string
+          nullable: true
+          enum:
+            - very_important
+            - important
+            - somewhat_important
+            - nice_to_have
+        minimum_score:
+          title: Minimum score
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+        default_question:
+          title: Default question
+          type: string
+          nullable: true
+        is_inferred:
+          title: Is inferred
+          type: boolean
+          readOnly: true
+        to_screen_for:
+          title: To screen for
+          type: boolean
+          description: Whether this requirement should be screened during knockout
+    JobData:
+      required:
+        - raw_text
+        - title
+      type: object
+      properties:
+        title:
+          title: Title
+          maxLength: 255
+          minLength: 1
+          type: string
+        external_reference_id:
+          title: External reference id
+          maxLength: 255
+          type: string
+          nullable: true
+        extra_information:
+          title: Extra information
+          type: string
+          nullable: true
+        raw_text:
+          title: Raw text
+          minLength: 1
+          type: string
+        company_name:
+          title: Company name
+          maxLength: 255
+          type: string
+          nullable: true
+        company_logo_url:
+          title: Company logo url
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        job_requirements:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeneratedJobRequirement'
+    Campaign:
+      required:
+        - company
+        - job_data
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        type:
+          title: Type
+          type: string
+          enum:
+            - regular
+            - cpa
+        status:
+          title: Status
+          type: string
+          readOnly: true
+          enum:
+            - draft
+            - paused
+            - active
+            - done
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+        job:
+          $ref: '#/components/schemas/Job'
+        hiring_goal:
+          title: Hiring goal
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+        hiring_goal_unit:
+          title: Hiring goal unit
+          type: string
+          nullable: true
+          enum:
+            - hire
+            - application
+            - qualified_application
+        hiring_goal_stages:
+          type: array
+          description: Which application stages should count towards the hiring goal
+            (list).
+          nullable: true
+          items:
+            title: Hiring goal stages
+            type: string
+            enum:
+              - SELECTED
+              - INVITED
+              - DRAFT
+              - APPLIED
+              - SCREENED
+              - INTERVIEWED
+              - SCHEDULED
+              - HIRED
+              - ABANDONED
+        hiring_goal_finalised:
+          title: Hiring goal finalised
+          type: boolean
+        hiring_goal_qualified:
+          title: Hiring goal qualified
+          type: boolean
+        language:
+          title: Language
+          type: string
+          enum:
+            - nl
+            - fr
+            - de
+            - en
+            - es
+        company:
+          title: Company
+          type: integer
+        job_data:
+          $ref: '#/components/schemas/JobData'
+        recruiter_phone:
+          title: Recruiter phone
+          maxLength: 30
+          type: string
+          nullable: true
+        recruiter_name:
+          title: Recruiter name
+          maxLength: 255
+          type: string
+          nullable: true
+        recruiter_email:
+          title: Recruiter email
+          maxLength: 254
+          type: string
+          format: email
+          nullable: true
+        knockout_enabled:
+          title: Knockout enabled
+          type: boolean
+          nullable: true
+        knockout_difficulty:
+          title: Knockout difficulty
+          type: string
+          nullable: true
+          enum:
+            - quick
+            - medium
+            - comprehensive
+            - custom
+        infer_knockout_answers:
+          title: Infer knockout answers
+          type: boolean
+          description: "When enabled, the knockout agent can infer answers from CV\
+            \ and skip asking questions if inference has high confidence. When disabled,\
+            \ the agent must always ask the knockout questions."
+        interview_enabled:
+          title: Interview enabled
+          type: boolean
+          nullable: true
+        interview_difficulty:
+          title: Interview difficulty
+          type: string
+          nullable: true
+          enum:
+            - EASY
+            - MEDIUM
+            - HARD
+            - PULSE_CHECK
+        shortlisting_enabled:
+          title: Shortlisting enabled
+          type: boolean
+          nullable: true
+        shortlisting_eligibility:
+          title: Shortlisting eligibility
+          type: string
+          nullable: true
+          enum:
+            - basic
+            - standard
+            - top
+        shortlisting_minimum_score:
+          title: Shortlisting minimum score
+          maximum: 100
+          minimum: 0
+          type: integer
+          nullable: true
+        metadata:
+          title: Metadata
+          type: object
+          properties: {}
+          nullable: true
+        channel_mapping:
+          title: Channel mapping
+          type: object
+          properties: {}
+          nullable: true
+        campaign_url:
+          title: Campaign url
+          type: string
+          readOnly: true
+        auto_stop_on_goal:
+          title: Auto stop on goal
+          type: boolean
+        webhook_url:
+          title: Webhook url
+          minLength: 1
+          type: string
+          description: "Webhook URL for campaign notifications. Documentation available\
+            \ at: https://qandidate.atlassian.net/wiki/spaces/VONQ/pages/4612390913/Kopilot+Webhooks"
+          format: uri
+        total_application_count:
+          title: Total application count
+          type: string
+          readOnly: true
+        application_count_by_stage:
+          title: Application count by stage
+          type: string
+          readOnly: true
+        last_application_date:
+          title: Last application date
+          type: string
+          readOnly: true
+        hiring_goal_count:
+          title: Hiring goal count
+          type: string
+          readOnly: true
+    Resume:
+      required:
+        - company_id
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        work:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Work'
+        education:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Education'
+        language:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Language'
+        skill:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Skills'
+        military_service:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/MilitaryService'
+        security_credential:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/SecurityCredential'
+        publication:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Publication'
+        reference:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Reference'
+        certification:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Certification'
+        award:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Award'
+        volunteer:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/Volunteer'
+        basic:
+          $ref: '#/components/schemas/Basic'
+        raw_text:
+          title: Raw text
+          minLength: 1
+          type: string
+          nullable: true
+        remote_url:
+          title: Remote url
+          minLength: 1
+          type: string
+          format: uri
+          nullable: true
+        company_id:
+          title: Company id
+          minLength: 1
+          type: string
+        can_invite_to_apply:
+          title: Can invite to apply
+          type: boolean
+          readOnly: true
+        application_count_by_stage:
+          title: Application count by stage
+          type: string
+          readOnly: true
+        name:
+          title: Name
+          minLength: 1
+          type: string
+          nullable: true
+        phone:
+          title: Phone
+          minLength: 1
+          type: string
+          nullable: true
+        email:
+          title: Email
+          minLength: 1
+          type: string
+          format: email
+          nullable: true
+        parser_configuration:
+          title: Parser configuration
+          type: string
+          enum:
+            - fast
+            - smart
+            - finetuned
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+        content_type:
+          title: Content type
+          maxLength: 255
+          type: string
+          nullable: true
+        raw_text_md5:
+          title: Raw text md5
+          maxLength: 32
+          type: string
+          nullable: true
+        processing_time:
+          title: Processing time
+          type: number
+          nullable: true
+        is_parsed:
+          title: Is parsed
+          type: boolean
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        total_experience:
+          title: Total experience
+          type: number
+          nullable: true
+        metadata:
+          title: Metadata
+          type: object
+          properties: {}
+          description: "Any extra data about the source of the resume, etc"
+          nullable: true
+        ats_integration:
+          title: Ats integration
+          type: integer
+          nullable: true
+        associated_companies:
+          uniqueItems: true
+          type: array
+          description: The companies that have access to this data.
+          items:
+            type: integer
+            description: The companies that have access to this data.
+    Application:
+      required:
+        - campaign_id
+        - resume_id
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        job:
+          $ref: '#/components/schemas/Job'
+        campaign:
+          $ref: '#/components/schemas/Campaign'
+        campaign_id:
+          title: Campaign id
+          type: integer
+        resume_id:
+          title: Resume id
+          type: integer
+        resume:
+          $ref: '#/components/schemas/Resume'
+        evaluation:
+          $ref: '#/components/schemas/ResumeEvaluation'
+        stage:
+          title: Stage
+          minLength: 1
+          type: string
+          readOnly: true
+        finalised:
+          title: Finalised
+          type: boolean
+        rejected_by_display_name:
+          title: Rejected by display name
+          type: string
+          readOnly: true
+        uuid:
+          title: Uuid
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+        overall_score:
+          title: Overall score
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - draft
+            - queued
+            - invited_to_apply
+            - applied
+            - knockout_assessed
+            - phone_screened
+            - interviewed
+            - offer_sent
+            - hired
+        invite_sent_at:
+          title: Invite sent at
+          type: string
+          format: date-time
+          nullable: true
+        finalise_max_date:
+          title: Finalise max date
+          type: string
+          format: date-time
+          nullable: true
+        vq_source:
+          title: Vq source
+          maxLength: 36
+          type: string
+          nullable: true
+        igb_tracker:
+          title: Igb tracker
+          maxLength: 36
+          type: string
+          nullable: true
+        qualified:
+          title: Qualified
+          type: boolean
+          nullable: true
+        qualification_reason:
+          title: Qualification reason
+          type: string
+          nullable: true
+        rejected:
+          title: Rejected
+          type: boolean
+        rejected_at:
+          title: Rejected at
+          type: string
+          format: date-time
+          nullable: true
+        rejected_reason:
+          title: Rejected reason
+          type: string
+          nullable: true
+        rejected_sent_at:
+          title: Rejected sent at
+          type: string
+          format: date-time
+          nullable: true
+        facebook_lead:
+          title: Facebook lead
+          type: integer
+          nullable: true
+        rejected_by:
+          title: Rejected by
+          type: integer
+          nullable: true
+    ResumeEvaluationDetail:
+      required:
+        - followup_questions
+        - interview_score
+        - job
+        - knockout_score
+        - resume
+        - score
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        resume:
+          title: Resume
+          type: integer
+          nullable: true
+        job:
+          title: Job
+          type: integer
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        job_requirements:
+          title: Job requirements
+          type: string
+          readOnly: true
+        custom_job_requirements:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/JobCustomRequirementEvaluation'
+        strengths:
+          title: Strengths
+          type: object
+          properties: {}
+          nullable: true
+        weaknesses:
+          title: Weaknesses
+          type: object
+          properties: {}
+          nullable: true
+        followup_questions:
+          title: Followup questions
+          type: object
+          properties: {}
+        score:
+          title: Score
+          type: integer
+        knockout_score:
+          title: Knockout score
+          type: integer
+          nullable: true
+        interview_score:
+          title: Interview score
+          type: integer
+          nullable: true
+        knockout_evaluation_done:
+          title: Knockout evaluation done
+          type: string
+          readOnly: true
+        interview_evaluation_done:
+          title: Interview evaluation done
+          type: string
+          readOnly: true
+        high_score_job_requirements:
+          title: High score job requirements
+          type: string
+          readOnly: true
+        low_score_job_requirements:
+          title: Low score job requirements
+          type: string
+          readOnly: true
+    ApplicationDetail:
+      required:
+        - campaign_id
+        - resume_id
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        job:
+          $ref: '#/components/schemas/Job'
+        campaign:
+          $ref: '#/components/schemas/Campaign'
+        campaign_id:
+          title: Campaign id
+          type: integer
+        resume_id:
+          title: Resume id
+          type: integer
+        resume:
+          $ref: '#/components/schemas/Resume'
+        evaluation:
+          $ref: '#/components/schemas/ResumeEvaluationDetail'
+        stage:
+          title: Stage
+          minLength: 1
+          type: string
+          readOnly: true
+        finalised:
+          title: Finalised
+          type: boolean
+        rejected_by_display_name:
+          title: Rejected by display name
+          type: string
+          readOnly: true
+        uuid:
+          title: Uuid
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+        overall_score:
+          title: Overall score
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - draft
+            - queued
+            - invited_to_apply
+            - applied
+            - knockout_assessed
+            - phone_screened
+            - interviewed
+            - offer_sent
+            - hired
+        invite_sent_at:
+          title: Invite sent at
+          type: string
+          format: date-time
+          nullable: true
+        finalise_max_date:
+          title: Finalise max date
+          type: string
+          format: date-time
+          nullable: true
+        vq_source:
+          title: Vq source
+          maxLength: 36
+          type: string
+          nullable: true
+        igb_tracker:
+          title: Igb tracker
+          maxLength: 36
+          type: string
+          nullable: true
+        qualified:
+          title: Qualified
+          type: boolean
+          nullable: true
+        qualification_reason:
+          title: Qualification reason
+          type: string
+          nullable: true
+        rejected:
+          title: Rejected
+          type: boolean
+        rejected_at:
+          title: Rejected at
+          type: string
+          format: date-time
+          nullable: true
+        rejected_reason:
+          title: Rejected reason
+          type: string
+          nullable: true
+        rejected_sent_at:
+          title: Rejected sent at
+          type: string
+          format: date-time
+          nullable: true
+        facebook_lead:
+          title: Facebook lead
+          type: integer
+          nullable: true
+        rejected_by:
+          title: Rejected by
+          type: integer
+          nullable: true
+    ApplicationConversationAttachmentAttachment:
+      required:
+        - content_type
+        - created_at
+        - file_name
+        - public_url
+      type: object
+      properties:
+        public_url:
+          title: Public url
+          minLength: 1
+          type: string
+          format: uri
+        content_type:
+          title: Content type
+          minLength: 1
+          type: string
+        file_name:
+          title: File name
+          minLength: 1
+          type: string
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+    ApplicationConversationAttachmentRelatedMessage:
+      required:
+        - body
+        - sender_type
+      type: object
+      properties:
+        sender_type:
+          title: Sender type
+          minLength: 1
+          type: string
+        body:
+          title: Body
+          minLength: 1
+          type: string
+    ApplicationConversationAttachments:
+      type: object
+      properties:
+        attachment:
+          $ref: '#/components/schemas/ApplicationConversationAttachmentAttachment'
+        related_messages:
+          type: array
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/ApplicationConversationAttachmentRelatedMessage'
+    JobRequirementEvaluation:
+      type: object
+      properties:
+        application_id:
+          title: Application id
+          type: string
+          readOnly: true
+        job_requirements:
+          title: Job requirements
+          type: string
+          readOnly: true
+    CampaignModule:
+      required:
+        - campaign
+        - module
+      type: object
+      properties:
+        module:
+          title: Module
+          type: string
+          enum:
+            - sourcing
+            - nurturing
+            - advertising
+            - assessments
+            - scheduling
+        campaign:
+          title: Campaign
+          type: integer
+    CampaignLeadNurturing:
+      type: object
+      properties:
+        leads_source_campaign_id:
+          title: Leads source campaign id
+          maxLength: 255
+          type: string
+          nullable: true
+        leads_first_reminder_hours:
+          title: Leads first reminder hours
+          maximum: 720
+          minimum: 1
+          type: integer
+          nullable: true
+        leads_second_reminder_hours:
+          title: Leads second reminder hours
+          maximum: 720
+          minimum: 1
+          type: integer
+          nullable: true
+        campaign_timezone:
+          title: Campaign timezone
+          maxLength: 255
+          type: string
+          description: "IANA compatible timezone e.g. \"UTC\", \"Europe/Amsterdam\"\
+            ."
+          nullable: true
+        social_media_channels:
+          title: Social media channels
+          type: object
+          properties: {}
+          description: List of social media channels associated with the campaign.
+          nullable: true
+        meta_compliance_checked:
+          title: Meta compliance checked
+          type: boolean
+          description: Indicates selection of right Meta campaign and setting up leads
+            campaign is the user's responsibility.
+        recruiter_name:
+          title: Recruiter name
+          maxLength: 255
+          type: string
+          nullable: true
+        recruiter_email:
+          title: Recruiter email
+          maxLength: 254
+          type: string
+          format: email
+          nullable: true
+        recruiter_phone:
+          title: Recruiter phone
+          maxLength: 30
+          type: string
+          nullable: true
+        messaging_service:
+          title: Messaging service
+          type: integer
+          description: Decides which phone number to use for sending messages in the
+            leads module.
+          nullable: true
+    Company:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        name:
+          title: Name
+          maxLength: 255
+          minLength: 1
+          type: string
+        branding_primary_color_hex:
+          title: Branding primary color hex
+          type: string
+          description: "Hex color code for the primary color of the company's branding,\
+            \ e.g. #FF0000"
+          nullable: true
+        branding_logo_url:
+          title: Branding logo url
+          type: string
+          description: "URL to the company's logo, must be a valid JPG or PNG image"
+          format: uri
+          nullable: true
+        candidate_branding_enabled:
+          title: Candidate branding enabled
+          type: boolean
+        facebook_account_id:
+          title: Facebook account id
+          maxLength: 255
+          type: string
+          nullable: true
+        company_branding_config:
+          title: Company branding config
+          type: string
+          readOnly: true
+        company_logo_url:
+          title: Company logo url
+          type: string
+          readOnly: true
+    JobCreate:
+      required:
+        - company
+        - title
+      type: object
+      properties:
+        title:
+          title: Title
+          maxLength: 255
+          minLength: 1
+          type: string
+        raw_text:
+          title: Raw text
+          type: string
+          nullable: true
+        location:
+          title: Location
+          maxLength: 255
+          type: string
+          nullable: true
+        remote_url:
+          title: Remote url
+          maxLength: 200
+          type: string
+          format: uri
+          nullable: true
+        hires_goal:
+          title: Hires goal
+          maximum: 2147483647
+          minimum: 0
+          type: integer
+        company:
+          title: Company
+          type: integer
+    InviteToApply:
+      required:
+        - communication_channel
+        - resume_ids
+      type: object
+      properties:
+        resume_ids:
+          type: array
+          items:
+            type: integer
+        communication_channel:
+          title: Communication channel
+          type: string
+          enum:
+            - web
+            - email
+            - whatsapp
+            - phone
+            - sms
+    TextToQuery:
+      required:
+        - text
+      type: object
+      properties:
+        text:
+          title: Text
+          maxLength: 5000
+          minLength: 1
+          type: string
+    BasicSearch:
+      type: object
+      properties:
+        boost:
+          title: "Boost value for the field, between 0.00 and 1.00. The more important\
+            \ the field is, the higher the boost value should be"
+          type: number
+        match:
+          title: Match
+          minLength: 1
+          type: string
+          default: should
+        name:
+          title: Name
+          minLength: 1
+          type: string
+        phone:
+          title: Phone
+          minLength: 1
+          type: string
+        email:
+          title: Email
+          minLength: 1
+          type: string
+        has_driving_license:
+          title: Has driving license
+          type: boolean
+        has_management_experience:
+          title: Has management experience
+          type: boolean
+        has_university_degree:
+          title: Has university degree
+          type: boolean
+        has_certifications:
+          title: Has certifications
+          type: boolean
+        is_self_employed:
+          title: Is self employed
+          type: boolean
+        has_security_clearance:
+          title: Has security clearance
+          type: boolean
+        has_military_experience:
+          title: Has military experience
+          type: boolean
+        has_volunteering_experience:
+          title: Has volunteering experience
+          type: boolean
+    WorkSearch:
+      type: object
+      properties:
+        boost:
+          title: "Boost value for the field, between 0.00 and 1.00. The more important\
+            \ the field is, the higher the boost value should be"
+          type: number
+        match:
+          title: Match
+          minLength: 1
+          type: string
+          default: should
+        position:
+          title: Position
+          minLength: 1
+          type: string
+        company:
+          title: Company
+          minLength: 1
+          type: string
+        occupations_code:
+          title: Occupations code
+          minLength: 1
+          type: string
+        occupations_title:
+          title: Occupations title
+          minLength: 1
+          type: string
+        is_current:
+          title: Is current
+          type: boolean
+    SkillSearch:
+      type: object
+      properties:
+        boost:
+          title: "Boost value for the field, between 0.00 and 1.00. The more important\
+            \ the field is, the higher the boost value should be"
+          type: number
+        match:
+          title: Match
+          minLength: 1
+          type: string
+          default: should
+        name:
+          title: Name
+          minLength: 1
+          type: string
+        level:
+          title: Level
+          minLength: 1
+          type: string
+    LanguageSearch:
+      type: object
+      properties:
+        boost:
+          title: "Boost value for the field, between 0.00 and 1.00. The more important\
+            \ the field is, the higher the boost value should be"
+          type: number
+        match:
+          title: Match
+          minLength: 1
+          type: string
+          default: should
+        name:
+          title: Name
+          minLength: 1
+          type: string
+        level:
+          title: Level
+          type: string
+          enum:
+            - beginner
+            - elementary
+            - intermediate
+            - upper_intermediate
+            - advanced
+            - native
+            - N/A
+    EducationSearch:
+      type: object
+      properties:
+        boost:
+          title: "Boost value for the field, between 0.00 and 1.00. The more important\
+            \ the field is, the higher the boost value should be"
+          type: number
+        match:
+          title: Match
+          minLength: 1
+          type: string
+          default: should
+        institution:
+          title: Institution
+          minLength: 1
+          type: string
+        study_type:
+          title: Study type
+          type: string
+          enum:
+            - bachelor
+            - master
+            - phd
+            - associate
+            - certificate
+            - diploma
+            - high_school
+            - other
+        area:
+          title: Area
+          minLength: 1
+          type: string
+    TotalExperienceSearch:
+      type: object
+      properties:
+        gte:
+          title: Gte
+          type: integer
+        lte:
+          title: Lte
+          type: integer
+    LocationRadiusSearch:
+      type: object
+      properties:
+        boost:
+          title: "Boost value for the field, between 0.00 and 1.00. The more important\
+            \ the field is, the higher the boost value should be"
+          type: number
+        match:
+          title: Match
+          minLength: 1
+          type: string
+          default: should
+        name:
+          title: Name
+          minLength: 1
+          type: string
+        place_type:
+          title: Place type
+          minLength: 1
+          type: string
+        longitude:
+          title: Longitude
+          type: number
+        latitude:
+          title: Latitude
+          type: number
+        radius_in_km:
+          title: Radius in km
+          type: integer
+    ResumeSearch:
+      type: object
+      properties:
+        page:
+          title: Search results page number
+          type: integer
+        page_size:
+          title: Number of results per page
+          type: integer
+        basic:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasicSearch'
+        work:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkSearch'
+        skill:
+          type: array
+          items:
+            $ref: '#/components/schemas/SkillSearch'
+        language:
+          type: array
+          items:
+            $ref: '#/components/schemas/LanguageSearch'
+        education:
+          type: array
+          items:
+            $ref: '#/components/schemas/EducationSearch'
+        total_experience:
+          $ref: '#/components/schemas/TotalExperienceSearch'
+        locations:
+          type: array
+          items:
+            $ref: '#/components/schemas/LocationRadiusSearch'
+        associated_companies:
+          type: array
+          items:
+            type: integer
+    FormFillTaskResponse:
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+    FacetOptions:
+      required:
+        - key
+        - label
+      type: object
+      properties:
+        key:
+          title: Key
+          minLength: 1
+          type: string
+        label:
+          title: Label
+          minLength: 1
+          type: string
+    FacetRules:
+      required:
+        - data
+        - rule
+      type: object
+      properties:
+        data:
+          title: Data
+          type: string
+        rule:
+          title: Rule
+          type: string
+          enum:
+            - email
+            - date
+            - int
+            - float
+            - maxlength
+            - minlength
+            - maxitems
+            - minvalue
+            - maxvalue
+            - regex
+            - url
+    FormFillerFacetsSerializer:
+      required:
+        - label
+        - name
+        - type
+      type: object
+      properties:
+        name:
+          title: Name
+          minLength: 1
+          type: string
+        type:
+          title: Type
+          type: string
+          enum:
+            - SELECT
+            - TEXT
+            - MULTIPLE
+            - EMAIL
+            - AUTOCOMPLETE
+            - HIER
+            - DATE
+            - TEXTEXPAND
+            - TEXTAREA
+            - HTMLAREA
+        label:
+          title: Label
+          minLength: 1
+          type: string
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacetOptions'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/FacetRules'
+        display_rules:
+          title: Display rules
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          nullable: true
+        autocomplete:
+          title: Autocomplete
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          nullable: true
+    ExtrasAutocomplete:
+      required:
+        - autocomplete_base_url
+        - autocomplete_request_headers
+      type: object
+      properties:
+        autocomplete_base_url:
+          title: The base URL for the autocomplete endpoints
+          minLength: 1
+          type: string
+          description: |2
+
+            ### Autocomplete Endpoint Specifications
+
+            The base URL for the autocomplete endpoints is designed to handle various facets of type `AUTOCOMPLETE`. Each facet's `name` key will correspond to a specific sub-path under this base URL. The following guidelines outline the structure and requirements for these endpoints:
+
+            #### Endpoint Structure
+
+            - **Base URL**: The primary URL for all autocomplete requests.
+            - **Sub-Paths**: Each facet's `name` key will define a unique sub-path under the base URL.
+
+            #### Request Method
+
+            - **HTTP Method**: All sub-path endpoints must accept `POST` requests.
+
+            #### Request Body
+
+            - **Content Type**: The request body must be in JSON format.
+            - **Required Parameters**:
+              - For facets that include `term` in their `required_parameters`, the JSON body must contain a `term` key with the search term as its value.
+
+            #### Example Request
+
+            In the following URL the autocomplete_base_url parameter is `https://base-domain.com/autocomplete`, the facet is `country` and the input for the autocomplete call is `fran`.
+
+
+            ```json
+            POST https://base-domain.com/autocomplete/country/
+            Content-Type: application/json
+
+            {
+              "term": "fran"
+            }
+            ```
+
+            #### Response Format
+
+            - **Content Type**: The response must be in JSON format.
+            - **Response Structure**: The response should be a JSON array of objects.
+            - **Required Keys**:
+              - `key`: The identifier for the option.
+              - `label`: The label for the option.
+
+            #### Example Response
+
+            ```json
+            [
+              {
+                "key": "option-identifier-1",
+                "label": "Option Label 1"
+              },
+              {
+                "key": "option-identifier-2",
+                "label": "Option Label 2"
+              }
+            ]
+            ```
+          format: uri
+        autocomplete_request_headers:
+          title: The headers to be included in the POST request to the autocomplete
+            endpoints
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          description: |2
+
+            The `autocomplete_request_headers` field allows you to specify custom headers to be included in the `POST` request to the autocomplete endpoints. This is particularly useful if your autocomplete endpoints require authentication or other specific headers.
+
+            #### Example Usage in a Request
+
+            ```json
+            {
+                "Content-Type": "application/json",
+                "X-Auth-Token": "your-token",
+                "X-Customer-Id": "your-customer-id",
+                "Custom-Header": "custom-value"
+            }
+    Extras:
+      type: object
+      properties:
+        autocomplete:
+          $ref: '#/components/schemas/ExtrasAutocomplete'
+        ai_instructions:
+          title: Ai instructions
+          minLength: 1
+          type: string
+    FormFillTaskRequest:
+      required:
+        - facets
+      type: object
+      properties:
+        id:
+          title: Id
+          type: integer
+          readOnly: true
+        facets:
+          type: array
+          items:
+            $ref: '#/components/schemas/FormFillerFacetsSerializer'
+        extras:
+          $ref: '#/components/schemas/Extras'
+        structured_context:
+          title: Structured context
+          type: object
+          properties: {}
+          nullable: true
+        unstructured_context:
+          title: Unstructured context
+          type: string
+        mock_smartfill_delay:
+          title: The delay in seconds to simulate the SmartFill process. Use this
+            for testing purposes only.
+          type: integer
+    FormFillTaskDetails:
+      type: object
+      properties:
+        created_at:
+          title: Created at
+          type: string
+          format: date-time
+        updated_at:
+          title: Updated at
+          type: string
+          format: date-time
+          readOnly: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - queued
+            - started
+            - completed
+            - errored
+        execution_time_ms:
+          title: Execution time ms
+          maximum: 2147483647
+          minimum: -2147483648
+          type: integer
+          nullable: true
+        error_description:
+          title: Error description
+          type: string
+          nullable: true
+        data:
+          title: Data
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+          readOnly: true
+    MetisFacetOptionsSerializer:
+      required:
+        - key
+        - label
+      type: object
+      properties:
+        key:
+          title: Key
+          minLength: 1
+          type: string
+        label:
+          title: Label
+          minLength: 1
+          type: string
+    MetisFacetRulesSerializer:
+      required:
+        - data
+        - rule
+      type: object
+      properties:
+        data:
+          title: Data
+          type: string
+        rule:
+          title: Rule
+          minLength: 1
+          type: string
+    MetisFacetsSerializer:
+      required:
+        - label
+        - name
+        - type
+      type: object
+      properties:
+        name:
+          title: Name
+          minLength: 1
+          type: string
+        type:
+          title: Type
+          type: string
+          enum:
+            - SELECT
+            - TEXT
+            - MULTIPLE
+            - EMAIL
+            - AUTOCOMPLETE
+            - HIER
+            - DATE
+            - TEXTEXPAND
+            - TEXTAREA
+        label:
+          title: Label
+          minLength: 1
+          type: string
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetisFacetOptionsSerializer'
+        rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetisFacetRulesSerializer'
+    MetisExtrasSerializer:
+      required:
+        - auth_key
+        - contract_id
+        - customer_id
+      type: object
+      properties:
+        auth_key:
+          title: Auth key
+          minLength: 1
+          type: string
+        customer_id:
+          title: Customer id
+          minLength: 1
+          type: string
+        contract_id:
+          title: Contract id
+          type: string
+          format: uuid
+    MetisRequest:
+      required:
+        - description
+        - facets
+      type: object
+      properties:
+        description:
+          title: Description
+          minLength: 1
+          type: string
+        facets:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetisFacetsSerializer'
+        extras:
+          $ref: '#/components/schemas/MetisExtrasSerializer'
+    MetisResponse:
+      required:
+        - data
+        - id
+        - status
+        - url
+      type: object
+      properties:
+        data:
+          title: Data
+          type: object
+          additionalProperties:
+            type: string
+            nullable: true
+        status:
+          title: Status
+          type: string
+          enum:
+            - queued
+            - started
+            - completed
+            - errored
+        id:
+          title: Id
+          type: integer
+        url:
+          title: Url
+          minLength: 1
+          type: string
+          format: uri
+    Timezone:
+      type: object
+      properties:
+        iana_code:
+          title: Iana code
+          maxLength: 255
+          minLength: 1
+          type: string
+          description: "IANA compatible timezone e.g. \"UTC\", \"Europe/Amsterdam\"\
+            ."
+          default: CET
+    StepstoneVacancy:
+      required:
+        - raw_text
+        - title
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        title:
+          title: Title
+          maxLength: 255
+          minLength: 1
+          type: string
+        raw_text:
+          title: Raw text
+          minLength: 1
+          type: string
+        status:
+          title: Status
+          type: string
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        company_description_header:
+          title: Company description header
+          type: string
+          nullable: true
+        company_description:
+          title: Company description
+          type: string
+          nullable: true
+        benefits_header:
+          title: Benefits header
+          type: string
+          nullable: true
+        benefits:
+          title: Benefits
+          type: string
+          nullable: true
+        function_description_header:
+          title: Function description header
+          type: string
+          nullable: true
+        function_description:
+          title: Function description
+          type: string
+          nullable: true
+        function_requirements:
+          title: Function requirements
+          type: string
+          nullable: true
+        function_requirements_header:
+          title: Function requirements header
+          type: string
+          nullable: true
+        application_procedure_header:
+          title: Application procedure header
+          type: string
+          nullable: true
+        application_procedure:
+          title: Application procedure
+          type: string
+          nullable: true
+        other:
+          title: Other
+          type: string
+          nullable: true
+    StepstoneCreateVacancy:
+      required:
+        - raw_text
+        - title
+      type: object
+      properties:
+        id:
+          title: ID
+          type: integer
+          readOnly: true
+        status:
+          title: Status
+          type: string
+          readOnly: true
+          enum:
+            - pending
+            - started
+            - error
+            - success
+        title:
+          title: Title
+          maxLength: 255
+          minLength: 1
+          type: string
+        raw_text:
+          title: Raw text
+          minLength: 1
+          type: string
+  securitySchemes:
+    Bearer:
+      type: apiKey
+      name: Authorization
+      in: header
+    Key:
+      type: apiKey
+      name: api_key
+      in: header
+x-original-swagger-version: "2.0"
